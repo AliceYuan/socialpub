@@ -1,0 +1,11 @@
+db structure
+database name: social pub
+each collection is a different book
+each entry contains:
+    userid
+    comment
+    start_pos: position of the start of the highlighted area
+    end_pos
+    page
+
+
