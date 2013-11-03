@@ -22,9 +22,9 @@ def getcomments():
     elementEndIndex = int(request.args.get("elementEndIndex", None))
     charStartIndex = int(request.args.get("charStartIndex", None))
     charEndIndex = int(request.args.get("charEndIndex", None))
-    if not paragraphStartIndex or not elementStartIndex or not charStartIndex:
+    if paragraphStartIndex is None or elementStartIndex is None or charStartIndex is None:
         return dumps({"error": "incorrect starting page indexing values"})
-    if not paragraphEndIndex or not elementEndIndex or not charEndIndex:
+    if paragraphEndIndex is None or elementEndIndex is None or charEndIndex is None:
         return dumps({"error": "incorrect ending page indexing values"})
 
     collection = bookTableLookup(bookId)
