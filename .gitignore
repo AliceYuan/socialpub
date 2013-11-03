@@ -10,3 +10,5 @@ proguard*
 libs/arme*
 libs/mips
 libs/x86
+*local.properties*
+
