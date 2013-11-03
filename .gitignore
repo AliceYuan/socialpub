@@ -1,1 +1,14 @@
+<<<<<<< HEAD
+.*
+~*
+*gen/
+*bin/
+*~
+obj/
 server/nohup.out
+proguard*
+libs/arme*
+libs/mips
+libs/x86
+*local.properties*
+
