@@ -38,11 +38,13 @@ import org.geometerplus.fbreader.bookmodel.BookModel;
 import org.geometerplus.fbreader.fbreader.ActionCode;
 import org.geometerplus.fbreader.fbreader.CancelMenuHelper;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
+import org.geometerplus.fbreader.fbreader.FBView;
 import org.geometerplus.fbreader.tips.TipsManager;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.library.ZLibrary;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
+import org.geometerplus.zlibrary.text.view.ZLTextWordCursor;
 import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.zlibrary.ui.android.application.ZLAndroidApplicationWindow;
 import org.geometerplus.zlibrary.ui.android.library.UncaughtExceptionHandler;
@@ -538,7 +540,20 @@ public final class FBReader extends Activity {
 
 	public boolean onResoRequested() {
 		Intent intent = new Intent(FBReader.this, ReSoViewPagerFragmentActivity.class);
-    	FBReader.this.startActivity(intent);
+    	
+		FBView fbView = FBReader.this.myFBReaderApp.BookTextView;
+		ZLTextWordCursor startWordCursor = fbView.getStartCursor();
+		ZLTextWordCursor endWordCursor = fbView.getEndCursor();
+		
+		intent.putExtra("bookId", FBReader.this.myFBReaderApp.Model.Book.getId());
+		intent.putExtra("startParagraphIndex", startWordCursor.getParagraphIndex());
+		intent.putExtra("startElementIndex", startWordCursor.getElementIndex());
+		intent.putExtra("startCharIndex", startWordCursor.getCharIndex());
+		intent.putExtra("endParagraphIndex", endWordCursor.getParagraphIndex());
+		intent.putExtra("endElementIndex", endWordCursor.getElementIndex());
+		intent.putExtra("startCharIndex", endWordCursor.getCharIndex());		
+		
+		FBReader.this.startActivity(intent);
 		return true;
 	}
 	

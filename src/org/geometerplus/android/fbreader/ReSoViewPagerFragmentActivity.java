@@ -6,6 +6,9 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Vector;
 
+import org.geometerplus.zlibrary.core.json.ZJSONParser;
+import org.geometerplus.zlibrary.text.view.ZLTextFixedPosition;
+import org.geometerplus.zlibrary.text.view.ZLTextPosition;
 import org.geometerplus.zlibrary.ui.android.R;
 
 import android.content.Context;
@@ -49,8 +52,26 @@ public class ReSoViewPagerFragmentActivity extends FragmentActivity{
 		fragments.add(Fragment.instantiate(this, DiscussionFragment.class.getName()));
 		config = new ImageLoaderConfiguration.Builder(getApplicationContext()).build();
 		ImageLoader.getInstance().init(config);
-		listData.add(new ResultObject("test","test","test","test","test","http://farm9.staticflickr.com/8086/8571183569_f366bbea75_s.jpg","1"));
-		listData.add(new ResultObject("alice","alice","alice","alice","alice","http://farm5.staticflickr.com/4121/4795424879_7e35b2cbf4_s.jpg","2"));
+		
+		
+		String bookId = Long.valueOf(getIntent().getLongExtra("bookId", 0)).toString();
+		int startParagraphIndex = getIntent().getIntExtra("startParagraphIndex", 0);
+		int startElementIndex = getIntent().getIntExtra("startElementIndex", 0);
+		int startCharIndex = getIntent().getIntExtra("startCharIndex", 0);
+		int endParagraphIndex = getIntent().getIntExtra("endParagraphIndex", 0);
+		int endElementIndex = getIntent().getIntExtra("endElementIndex", 0);
+		int endCharIndex = getIntent().getIntExtra("startCharIndex", 0);	
+		
+		ZLTextPosition startPosition = new ZLTextFixedPosition(startParagraphIndex, startElementIndex, startCharIndex);
+		ZLTextPosition endPosition = new ZLTextFixedPosition(endParagraphIndex, endElementIndex, endCharIndex);
+		ZJSONParser jsonParser = new ZJSONParser();
+		ResultObject[] comments = jsonParser.fetchComments(bookId, startPosition, endPosition);
+		for (ResultObject comment : comments) {
+			listData.add(comment);
+			//listData.add(new ResultObject("test","test","test","test","test","http://farm9.staticflickr.com/8086/8571183569_f366bbea75_s.jpg","1"));
+			//listData.add(new ResultObject("alice","alice","alice","alice","alice","http://farm5.staticflickr.com/4121/4795424879_7e35b2cbf4_s.jpg","2"));
+		}
+
 		this.mPagerAdapter  = new ReSoPagerAdapter(super.getSupportFragmentManager(), fragments);
 		//
 		
