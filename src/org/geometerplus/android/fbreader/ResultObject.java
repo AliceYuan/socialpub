@@ -4,18 +4,42 @@ public class ResultObject {
 	private String query;
 	private String id;
 	private String title;
+	private String userId;
 	private String ownerName;
 	private String dateupload;
 	private String image;
+	private int paragraphStartIndex;
+	private int paragraphEndIndex;
+	private int elementStartIndex;
+	private int elementEndIndex;
+	private int charStartIndex;
+	private int charEndIndex;
 
-
-	ResultObject(String query, String id, String title, String ownername, String dateupload, String image){
+	public ResultObject(String query, String id, String title, String ownername, String dateupload, String image, String userId) {
 		this.query = query;
 		this.id = id;
 		this.title = title;
 		this.ownerName = ownername;
 		this.dateupload = dateupload;
 		this.setImage(image);
+		this.userId = userId;
+	}
+	
+	public void setRange(int paragraphStartIndex, int paragraphEndIndex, int elementStartIndex, int elementEndIndex, int charStartIndex, int charEndIndex) {
+		this.paragraphStartIndex = paragraphStartIndex;
+		this.paragraphEndIndex = paragraphEndIndex;
+		this.elementStartIndex = elementStartIndex;
+		this.elementEndIndex = elementEndIndex;
+		this.charStartIndex = charStartIndex;
+		this.charEndIndex = charEndIndex;
+	}
+	
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getId() {
