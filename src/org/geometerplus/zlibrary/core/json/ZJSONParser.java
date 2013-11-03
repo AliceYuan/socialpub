@@ -79,7 +79,8 @@ public final class ZJSONParser {
         
         JSONObject json = new JSONObject();
         try {
-			json.put(TAG_USERID, Integer.parseInt(comment.getUserId()));
+			json.put(TAG_BOOKID, comment.getId());
+        	json.put(TAG_USERID, Integer.parseInt(comment.getUserId()));
 	        json.put(TAG_COMMENT, comment.getQuery());
 	        json.put(TAG_PARASTARTINDEX, startPos.getParagraphIndex());
 	        json.put(TAG_PARAENDINDEX, endPos.getParagraphIndex());
@@ -94,7 +95,6 @@ public final class ZJSONParser {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-        
     	sendJSONToServer(url, json);
     }
     

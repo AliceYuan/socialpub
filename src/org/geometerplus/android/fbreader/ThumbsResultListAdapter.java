@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
@@ -41,6 +40,8 @@ public class ThumbsResultListAdapter extends ArrayAdapter<ResultObject> {
 					.findViewById(R.id.img_thumbnail);
 			holder.commentText = (TextView) row
 					.findViewById(R.id.comment_text_field);
+			holder.userName = (TextView) row.findViewById(R.id.user_name_text_field);
+			holder.date = (TextView) row.findViewById(R.id.date_text_field);
 			row.setTag(holder);
 		} else {
 			holder = (resultHolder) row.getTag();
@@ -49,14 +50,13 @@ public class ThumbsResultListAdapter extends ArrayAdapter<ResultObject> {
 
 		final ResultObject result = ReSoViewPagerFragmentActivity.getListData().get(position);
 		holder.commentText.setText(result.getQuery());
+		holder.userName.setText(result.getOwnerName());
+		holder.date.setText(result.getDatetaken());
 		DiscussionFragment.imageLoader.displayImage(result.getImageUrl(),
 				holder.profileIcon, new SimpleImageLoadingListener() {
-//					@Override
-//					public void onLoadingComplete(String imageUri, View view,
-//							Bitmap loadedImage) {
-//					}
 				});
 
+		
 		return row;
 	}
 
@@ -64,5 +64,7 @@ public class ThumbsResultListAdapter extends ArrayAdapter<ResultObject> {
 	private class resultHolder {
 		RoundedImageView profileIcon;
 		TextView commentText;
+		TextView userName;
+		TextView date;
 	}
 }

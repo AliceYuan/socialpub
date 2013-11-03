@@ -3,13 +3,13 @@ package org.geometerplus.android.fbreader;
 import android.widget.EditText;
 
 public class ResultObject {
-	private String query;
-	private String id;
-	private String title;
-	private String userId;
-	private String ownerName;
-	private String dateupload;
-	private String image;
+	private String query = "";
+	private String id = "";
+	private String title = "";
+	private String userId = "";
+	private String ownerName = "";
+	private String dateupload = "";
+	private String image = "";
 	private int paragraphStartIndex;
 	private int paragraphEndIndex;
 	private int elementStartIndex;

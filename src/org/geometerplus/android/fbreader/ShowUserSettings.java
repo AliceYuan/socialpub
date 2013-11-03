@@ -10,7 +10,7 @@ public class ShowUserSettings extends FBAndroidAction {
 
 	@Override
 	protected void run(Object... params) {
-		BaseActivity.onResoRequested();
+		BaseActivity.onUserSettingsRequested();
 
 	}
 }

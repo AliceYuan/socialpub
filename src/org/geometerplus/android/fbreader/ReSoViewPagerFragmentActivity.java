@@ -91,7 +91,8 @@ public class ReSoViewPagerFragmentActivity extends FragmentActivity{
 				Calendar c = Calendar.getInstance();
 		        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		        String formattedDate = df.format(c.getTime());
-				ResultObject commentObj = new ResultObject(comment, "1", "title", "??", formattedDate, "imageurl", "123" );
+				String bookId = Long.valueOf(getIntent().getLongExtra("bookId", 0)).toString();
+				ResultObject commentObj = new ResultObject(comment, bookId, "title", FBReader.userName , formattedDate, FBReader.userProfileImage, "123" );
 				int startParagraphIndex = getIntent().getIntExtra("startParagraphIndex", 0);
 				int startElementIndex = getIntent().getIntExtra("startElementIndex", 0);
 				int startCharIndex = getIntent().getIntExtra("startCharIndex", 0);
