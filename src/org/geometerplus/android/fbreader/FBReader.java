@@ -203,7 +203,8 @@ public final class FBReader extends Activity {
 		ZLTextWordCursor endWordCursor = myCurrentPage.EndCursor;
 
 		//myFBReaderApp.Model.Book.File.getShortName();
-		String id = Long.valueOf(myFBReaderApp.Model.Book.getId()).toString();
+		//String id = Long.valueOf(myFBReaderApp.Model.Book.getId()).toString();
+		String id = myFBReaderApp.Model.Book.File.getShortName();
 		ZLTextPosition startPosition = new ZLTextFixedPosition(startWordCursor.getParagraphIndex(), startWordCursor.getElementIndex(), startWordCursor.getCharIndex());
 		ZLTextPosition endPosition = new ZLTextFixedPosition(endWordCursor.getParagraphIndex(), endWordCursor.getElementIndex(), endWordCursor.getCharIndex());
 		ZJSONParser jsonParser = new ZJSONParser();
@@ -626,7 +627,7 @@ public final class FBReader extends Activity {
 		ZLTextWordCursor endWordCursor = fbView.getEndCursor();
 
 		intent.putExtra("bookId",
-				FBReader.this.myFBReaderApp.Model.Book.getId());
+				FBReader.this.myFBReaderApp.Model.Book.File.getShortName());
 		intent.putExtra("startParagraphIndex",
 				startWordCursor.getParagraphIndex());
 		intent.putExtra("startElementIndex", startWordCursor.getElementIndex());

@@ -55,7 +55,8 @@ public class ReSoViewPagerFragmentActivity extends FragmentActivity{
 		ImageLoader.getInstance().init(config);
 		
 		
-		String bookId = Long.valueOf(getIntent().getLongExtra("bookId", 0)).toString();
+		//String bookId = Long.valueOf(getIntent().getLongExtra("bookId", 0)).toString();
+		String bookId = getIntent().getStringExtra("bookId");
 		int startParagraphIndex = getIntent().getIntExtra("startParagraphIndex", 0);
 		int startElementIndex = getIntent().getIntExtra("startElementIndex", 0);
 		int startCharIndex = getIntent().getIntExtra("startCharIndex", 0);
@@ -91,7 +92,7 @@ public class ReSoViewPagerFragmentActivity extends FragmentActivity{
 				Calendar c = Calendar.getInstance();
 		        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		        String formattedDate = df.format(c.getTime());
-				String bookId = Long.valueOf(getIntent().getLongExtra("bookId", 0)).toString();
+				String bookId = getIntent().getStringExtra("bookId");
 				ResultObject commentObj = new ResultObject(comment, bookId, "title", FBReader.userName , formattedDate, FBReader.userProfileImage, "123" );
 				int startParagraphIndex = getIntent().getIntExtra("startParagraphIndex", 0);
 				int startElementIndex = getIntent().getIntExtra("startElementIndex", 0);
