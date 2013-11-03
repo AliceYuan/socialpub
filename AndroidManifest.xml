@@ -52,7 +52,7 @@
 		</service>
 		<activity android:name="org.geometerplus.android.fbreader.ReSoViewPagerFragmentActivity">
 		</activity>
-		<activity android:name="org.geometerplus.android.fbreader.FBReader" android:launchMode="singleTask" android:icon="@drawable/fbreader" android:label="FBReader" android:theme="@style/FBReader.Activity" android:configChanges="orientation|keyboardHidden|screenSize">
+		<activity android:name="org.geometerplus.android.fbreader.FBReader" android:launchMode="singleTask" android:icon="@drawable/fbreader" android:label="FBReader" android:theme="@style/Sherlock.__Theme.Light" android:configChanges="orientation|keyboardHidden|screenSize">
    			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 				<category android:name="android.intent.category.LAUNCHER"/>
