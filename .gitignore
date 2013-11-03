@@ -1,9 +1,12 @@
 <<<<<<< HEAD
 .*
 ~*
-gen/
-bin/
+*gen/*
+*bin/*
 *~
 obj/
 server/nohup.out
 proguard*
+libs/arme*
+libs/mips
+libs/x86
