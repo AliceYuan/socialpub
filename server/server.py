@@ -33,12 +33,12 @@ def getcomments():
     collection = collection["collection"]
 
     query = {
-        "$or": [{"paragraphStartIndex": {"$in": range(paragraphStartIndex, paragraphEndIndex)}},
-            {"paragraphEndIndex": {"$in": range(paragraphStartIndex, paragraphEndIndex)}}],
-        "$or": [{"elementStartIndex": {"$in": range(elementStartIndex, elementEndIndex)}},
-            {"elementEndIndex": {"$in": range(elementStartIndex, elementEndIndex)}}],
-        "$or": [{"charStartIndex": {"$in": range(charStartIndex, charEndIndex)}},
-            {"charEndIndex": {"$in": range(charStartIndex, charEndIndex)}}]
+        "$and" : [{"paragraphStartIndex": {"$lte": paragraphEndIndex}},
+                {"paragraphEndIndex": {"$gte": paragraphStartIndex}}],
+        "$and" : [{"elementStartIndex": {"$lte": elementEndIndex}},
+                {"elementEndIndex": {"$gte": elementStartIndex}}],
+        "$and" : [{"charStartIndex": {"$lte": charEndIndex}},
+                {"charEndIndex": {"$gte": charStartIndex}}]                 
     }
     results = [x for x in db[collection].find(query)]
     return dumps(results)
