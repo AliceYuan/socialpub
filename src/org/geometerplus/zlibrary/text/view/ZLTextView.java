@@ -21,6 +21,7 @@ package org.geometerplus.zlibrary.text.view;
 
 import java.util.*;
 
+import org.geometerplus.android.fbreader.FBReader;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.util.RationalNumber;
@@ -262,6 +263,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 					myNextPage.PaintState = PaintStateEnum.START_IS_KNOWN;
 					Application.getViewWidget().reset();
 				}
+				FBReader.pageTurn(myCurrentPage);
 				break;
 			}
 			case next:
@@ -282,6 +284,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 						myNextPage.PaintState = PaintStateEnum.START_IS_KNOWN;
 						break;
 				}
+				FBReader.pageTurn(myCurrentPage);
 				break;
 			}
 		}

@@ -41,8 +41,12 @@ import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.fbreader.fbreader.FBView;
 import org.geometerplus.fbreader.tips.TipsManager;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
+import org.geometerplus.zlibrary.core.json.ZJSONParser;
 import org.geometerplus.zlibrary.core.library.ZLibrary;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
+import org.geometerplus.zlibrary.text.view.ZLTextFixedPosition;
+import org.geometerplus.zlibrary.text.view.ZLTextPage;
+import org.geometerplus.zlibrary.text.view.ZLTextPosition;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
 import org.geometerplus.zlibrary.text.view.ZLTextWordCursor;
 import org.geometerplus.zlibrary.ui.android.R;
@@ -73,6 +77,7 @@ import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public final class FBReader extends Activity {
 	public static final String ACTION_OPEN_BOOK = "android.fbreader.action.VIEW";
@@ -111,7 +116,7 @@ public final class FBReader extends Activity {
 
 	private int myFullScreenFlag;
 	private String myMenuLanguage;
-
+	private static TextView notifIndic;
 	private static final String PLUGIN_ACTION_PREFIX = "___";
 	private final List<PluginApi.ActionInfo> myPluginActions = new LinkedList<PluginApi.ActionInfo>();
 	private final BroadcastReceiver myPluginInfoReceiver = new BroadcastReceiver() {
@@ -191,6 +196,21 @@ public final class FBReader extends Activity {
 		};
 	}
 
+	
+	public static void pageTurn(ZLTextPage myCurrentPage){
+		FBReaderApp myFBReaderApp = (FBReaderApp) FBReaderApp.Instance();
+		ZLTextWordCursor startWordCursor = myCurrentPage.StartCursor;
+		ZLTextWordCursor endWordCursor = myCurrentPage.EndCursor;
+
+		//myFBReaderApp.Model.Book.File.getShortName();
+		String id = Long.valueOf(myFBReaderApp.Model.Book.getId()).toString();
+		ZLTextPosition startPosition = new ZLTextFixedPosition(startWordCursor.getParagraphIndex(), startWordCursor.getElementIndex(), startWordCursor.getCharIndex());
+		ZLTextPosition endPosition = new ZLTextFixedPosition(endWordCursor.getParagraphIndex(), endWordCursor.getElementIndex(), endWordCursor.getCharIndex());
+		ZJSONParser jsonParser = new ZJSONParser();
+		ResultObject[] comments = jsonParser.fetchComments(id, startPosition, endPosition);
+		notifIndic.setText(Integer.valueOf(comments.length).toString());
+	}
+	
 	@Override
 	protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
@@ -202,6 +222,7 @@ public final class FBReader extends Activity {
 		setContentView(R.layout.main);
 		myRootView = (RelativeLayout) findViewById(R.id.root_view);
 		myMainView = (ZLAndroidWidget) findViewById(R.id.main_view);
+		notifIndic = (TextView) findViewById(R.id.notif_indicator);
 		setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
 
 		getZLibrary().setActivity(this);
