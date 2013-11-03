@@ -117,7 +117,7 @@ public final class ZJSONParser {
 				JSONObject jObj = jArray.getJSONObject(i);
 				ResultObject rObj = new ResultObject(
 						jObj.getString(TAG_COMMENT),
-						Integer.toString(jObj.getInt(TAG_BOOKID)),
+						bookId,
 						"",
 						"",
 						jObj.getString(TAG_TIMESTAMP),

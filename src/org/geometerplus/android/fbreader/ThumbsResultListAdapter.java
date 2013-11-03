@@ -19,7 +19,6 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 public class ThumbsResultListAdapter extends ArrayAdapter<ResultObject> {
 	private Context context;
 	private int layoutResourceId;
-	private ArrayList<ResultObject> data = null;
 	private resultHolder holder = null;
 
 	public ThumbsResultListAdapter(FragmentActivity fragmentActivity,
@@ -27,7 +26,6 @@ public class ThumbsResultListAdapter extends ArrayAdapter<ResultObject> {
 		super(fragmentActivity, layoutResourceId, listData);
 		this.layoutResourceId = layoutResourceId;
 		this.context = fragmentActivity;
-		this.data = listData;
 	}
 
 	@Override
@@ -49,8 +47,8 @@ public class ThumbsResultListAdapter extends ArrayAdapter<ResultObject> {
 			holder.profileIcon.setImageDrawable(null);
 		}
 
-		final ResultObject result = data.get(position);
-		holder.commentText.setText(result.getTitle());
+		final ResultObject result = ReSoViewPagerFragmentActivity.getListData().get(position);
+		holder.commentText.setText(result.getQuery());
 		DiscussionFragment.imageLoader.displayImage(result.getImageUrl(),
 				holder.profileIcon, new SimpleImageLoadingListener() {
 //					@Override

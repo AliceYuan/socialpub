@@ -1,5 +1,7 @@
 package org.geometerplus.android.fbreader;
 
+import android.widget.EditText;
+
 public class ResultObject {
 	private String query;
 	private String id;
@@ -25,6 +27,7 @@ public class ResultObject {
 		this.userId = userId;
 	}
 	
+
 	public void setRange(int paragraphStartIndex, int paragraphEndIndex, int elementStartIndex, int elementEndIndex, int charStartIndex, int charEndIndex) {
 		this.paragraphStartIndex = paragraphStartIndex;
 		this.paragraphEndIndex = paragraphEndIndex;
