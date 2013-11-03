@@ -256,6 +256,7 @@ public final class FBReader extends Activity {
 		myFBReaderApp.addAction(ActionCode.SHOW_BOOKMARKS, new ShowBookmarksAction(this, myFBReaderApp));
 		myFBReaderApp.addAction(ActionCode.SHOW_NETWORK_LIBRARY, new ShowNetworkLibraryAction(this, myFBReaderApp));
 		myFBReaderApp.addAction(ActionCode.SHOW_RESO, new ShowReSoAction(this, myFBReaderApp));
+		myFBReaderApp.addAction(ActionCode.SHOW_USER_SETTINGS, new ShowUserSettings(this, myFBReaderApp));
 
 
 		myFBReaderApp.addAction(ActionCode.SHOW_MENU, new ShowMenuAction(this, myFBReaderApp));
@@ -665,6 +666,8 @@ public final class FBReader extends Activity {
 //		addMenuItem(menu, ActionCode.SHARE_BOOK, R.drawable.ic_menu_search);
 		addMenuItem(menu, ActionCode.SHOW_PREFERENCES);
 		addMenuItem(menu, ActionCode.SHOW_BOOK_INFO);
+		addMenuItem(menu, ActionCode.SHOW_USER_SETTINGS);
+
 		final Menu subMenu = addSubMenu(menu, "screenOrientation");
 		addMenuItem(subMenu, ActionCode.SET_SCREEN_ORIENTATION_SYSTEM);
 		addMenuItem(subMenu, ActionCode.SET_SCREEN_ORIENTATION_SENSOR);
@@ -674,11 +677,6 @@ public final class FBReader extends Activity {
 			addMenuItem(subMenu, ActionCode.SET_SCREEN_ORIENTATION_REVERSE_PORTRAIT);
 			addMenuItem(subMenu, ActionCode.SET_SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
 		}
-//		addMenuItem(menu, ActionCode.INCREASE_FONT);
-//		addMenuItem(menu, ActionCode.DECREASE_FONT);
-//		addMenuItem(menu, ActionCode.SHOW_NAVIGATION);
-//		addMenuItem(menu, ActionCode.OPEN_WEB_HELP);
-//		addMenuItem(menu, ActionCode.SHOW_RESO);
 
 		synchronized (myPluginActions) {
 			int index = 0;

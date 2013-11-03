@@ -29,6 +29,7 @@ public class ReSoViewPagerFragmentActivity extends FragmentActivity{
 	private PagerAdapter mPagerAdapter;
 	private ImageLoaderConfiguration config;
 	private static ArrayList<ResultObject> listData = new ArrayList<ResultObject>();
+	ZJSONParser jsonParser;
 	public static EditText commentText;
 	/* (non-Javadoc)
 	 * @see android.support.v4.app.FragmentActivity#onCreate(android.os.Bundle)
@@ -48,7 +49,7 @@ public class ReSoViewPagerFragmentActivity extends FragmentActivity{
 	private void initialisePaging() {
 
 		List<Fragment> fragments = new Vector<Fragment>();
-		fragments.add(Fragment.instantiate(this, MediaFragment.class.getName()));
+		//fragments.add(Fragment.instantiate(this, MediaFragment.class.getName()));
 		fragments.add(Fragment.instantiate(this, DiscussionFragment.class.getName()));
 		config = new ImageLoaderConfiguration.Builder(getApplicationContext()).build();
 		ImageLoader.getInstance().init(config);
@@ -64,14 +65,13 @@ public class ReSoViewPagerFragmentActivity extends FragmentActivity{
 		
 		ZLTextPosition startPosition = new ZLTextFixedPosition(startParagraphIndex, startElementIndex, startCharIndex);
 		ZLTextPosition endPosition = new ZLTextFixedPosition(endParagraphIndex, endElementIndex, endCharIndex);
-		ZJSONParser jsonParser = new ZJSONParser();
+		jsonParser = new ZJSONParser();
+		listData.clear();
 		ResultObject[] comments = jsonParser.fetchComments(bookId, startPosition, endPosition);
 		for (ResultObject comment : comments) {
 			listData.add(comment);
-			//listData.add(new ResultObject("test","test","test","test","test","http://farm9.staticflickr.com/8086/8571183569_f366bbea75_s.jpg","1"));
-			//listData.add(new ResultObject("alice","alice","alice","alice","alice","http://farm5.staticflickr.com/4121/4795424879_7e35b2cbf4_s.jpg","2"));
 		}
-
+		
 		this.mPagerAdapter  = new ReSoPagerAdapter(super.getSupportFragmentManager(), fragments);
 		//
 		
@@ -91,16 +91,25 @@ public class ReSoViewPagerFragmentActivity extends FragmentActivity{
 				Calendar c = Calendar.getInstance();
 		        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		        String formattedDate = df.format(c.getTime());
-				new ResultObject(comment, "1234", "1234", "1234", formattedDate, "blah", "userid");
+				ResultObject commentObj = new ResultObject(comment, "1", "title", "??", formattedDate, "imageurl", "123" );
+				int startParagraphIndex = getIntent().getIntExtra("startParagraphIndex", 0);
+				int startElementIndex = getIntent().getIntExtra("startElementIndex", 0);
+				int startCharIndex = getIntent().getIntExtra("startCharIndex", 0);
+				int endParagraphIndex = getIntent().getIntExtra("endParagraphIndex", 0);
+				int endElementIndex = getIntent().getIntExtra("endElementIndex", 0);
+				int endCharIndex = getIntent().getIntExtra("startCharIndex", 0);	
+				commentObj.setRange(startParagraphIndex, endParagraphIndex, startElementIndex, endElementIndex, startCharIndex, endCharIndex);
+				ZLTextPosition startPosition = new ZLTextFixedPosition(startParagraphIndex, startElementIndex, startCharIndex);
+				ZLTextPosition endPosition = new ZLTextFixedPosition(endParagraphIndex, endElementIndex, endCharIndex);
+				listData.add(commentObj);
+				mPagerAdapter.notifyDataSetChanged();
+				jsonParser.addComment(commentObj, startPosition, endPosition);
 			}
 			catch(Exception e){ 
 				e.printStackTrace(); 
 			}
 		}
 	}
-	
-	
-
 
 	public static ArrayList<ResultObject> getListData() {
 		return listData;

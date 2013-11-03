@@ -10,7 +10,7 @@
         android:layout_height="fill_parent"
         android:layout_margin="20dp"
         android:layout_alignParentTop="true"
-        android:divider="#7E7E7E"
+        android:divider="#3E3E3E"
         android:dividerHeight="1px"
         android:cacheColorHint="#00000000" >
     </ListView>
@@ -28,10 +28,11 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_toLeftOf="@+id/search_btn"
-            android:background="#ffffff"
+            android:background="@drawable/bubble_right"
             android:hint="Write a comment..."
             android:inputType="text"
-            android:padding="10dp" />
+            android:textSize="18px"
+            android:padding="20dp" />
 
         <Button
             android:id="@+id/search_btn"
