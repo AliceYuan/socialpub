@@ -31,9 +31,15 @@ import org.geometerplus.zlibrary.text.hyphenation.ZLTextHyphenator;
 import org.geometerplus.zlibrary.text.model.ZLTextModel;
 import org.geometerplus.zlibrary.text.view.*;
 
+import org.geometerplus.android.fbreader.FBReader;
+import org.geometerplus.android.fbreader.ReSoViewPagerFragmentActivity;
 import org.geometerplus.fbreader.book.*;
 import org.geometerplus.fbreader.bookmodel.*;
 import org.geometerplus.fbreader.fbreader.options.*;
+
+import android.content.Intent;
+import android.view.View;
+import android.view.View.OnLongClickListener;
 
 public final class FBReaderApp extends ZLApplication {
 	public final ZLBooleanOption AllowScreenBrightnessAdjustmentOption =
@@ -111,7 +117,8 @@ public final class FBReaderApp extends ZLApplication {
 
 	public FBReaderApp(IBookCollection collection) {
 		Collection = collection;
-
+		
+		
 		collection.addListener(new IBookCollection.Listener() {
 			public void onBookEvent(BookEvent event, Book book) {
 				switch (event) {
