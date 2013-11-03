@@ -10,6 +10,8 @@
         android:layout_height="fill_parent"
         android:layout_margin="20dp"
         android:layout_alignParentTop="true"
+        android:divider="#7E7E7E"
+        android:dividerHeight="1px"
         android:cacheColorHint="#00000000" >
     </ListView>
 

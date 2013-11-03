@@ -24,17 +24,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import android.app.Activity;
-import android.app.SearchManager;
-import android.content.*;
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.PowerManager;
-import android.util.Log;
-import android.view.*;
-import android.widget.RelativeLayout;
-
 import org.geometerplus.android.fbreader.api.ApiListener;
 import org.geometerplus.android.fbreader.api.ApiServerImplementation;
 import org.geometerplus.android.fbreader.api.PluginApi;
@@ -50,9 +39,6 @@ import org.geometerplus.fbreader.fbreader.ActionCode;
 import org.geometerplus.fbreader.fbreader.CancelMenuHelper;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.fbreader.tips.TipsManager;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.library.ZLibrary;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
@@ -85,12 +71,6 @@ import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
-
-import org.geometerplus.zlibrary.core.json.*;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public final class FBReader extends Activity {
 	public static final String ACTION_OPEN_BOOK = "android.fbreader.action.VIEW";
@@ -203,8 +183,6 @@ public final class FBReader extends Activity {
 			}
 		};
 	}
-
-	al String TAG_PAGE = "page";
 
 	@Override
 	protected void onCreate(Bundle icicle) {

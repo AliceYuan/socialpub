@@ -70,7 +70,7 @@ public class ReSoViewPagerFragmentActivity extends FragmentActivity{
 				Calendar c = Calendar.getInstance();
 		        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		        String formattedDate = df.format(c.getTime());
-				new ResultObject(comment, "1234", "1234", "1234", formattedDate, "blah");
+				new ResultObject(comment, "1234", "1234", "1234", formattedDate, "blah", "userid");
 			}
 			catch(Exception e){ 
 				e.printStackTrace(); 
