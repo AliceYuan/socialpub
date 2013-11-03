@@ -39,13 +39,13 @@ def getcomments():
     idxStartStr = getIndexStr(paragraphStartIndex, elementStartIndex, charStartIndex)
     idxEndStr = getIndexStr(paragraphStartIndex, elementStartIndex, charEndIndex)
 
-    collection = bookTableLookup(bookId)
-    if not collection:
-        return dumps({"error": "no such book"})
-    collection = collection["collection"]
+    #collection = bookTableLookup(bookId)
+    #if not collection:
+    #    return dumps({"error": "no such book"})
+    #collection = collection["collection"]
 
     results = []
-    for row in db[collection]:
+    for row in db['comments'].find({'bookId': bookId}):
         pageStartStr = getIndexStr(row['paragraphStartIndex'], row['elementStartIndex'], row['charStartIndex'])
         pageEndStr = getIndexStr(row['paragraphEndIndex'], row['elementEndIndex'], row['charEndIndex'])
         if ((idxEndStr >= pageStartStr and idxEndStr < pageEndStr) or
@@ -63,7 +63,7 @@ def getcomments():
 
 @app.route("/comment", methods=["POST"])
 def comment():
-    db["testbook"].insert(loads(request.data))
+    db["comments"].insert(loads(request.data))
     return ""
 
 if __name__ == "__main__":
