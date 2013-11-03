@@ -46,6 +46,8 @@ public final class ZJSONParser {
     static final String TAG_CHARENDINDEX = "charEndIndex";
     static final String TAG_USERURL = "userUrl";
     static final String TAG_TIMESTAMP = "timestamp";
+    static final String TAG_TITLE = "title";
+    static final String TAG_OWNERNAME = "ownerName";
     
     public ZJSONParser() {}
     
@@ -87,6 +89,8 @@ public final class ZJSONParser {
 	        json.put(TAG_CHARENDINDEX, endPos.getCharIndex());
 	        json.put(TAG_USERURL, comment.getImageUrl());
 	        json.put(TAG_TIMESTAMP, comment.getDatetaken());
+	        json.put(TAG_TITLE, comment.getTitle());
+	        json.put(TAG_OWNERNAME, comment.getOwnerName());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -118,8 +122,8 @@ public final class ZJSONParser {
 				ResultObject rObj = new ResultObject(
 						jObj.getString(TAG_COMMENT),
 						Integer.toString(jObj.getInt(TAG_BOOKID)),
-						"",
-						"",
+						jObj.optString(TAG_TITLE),
+						jObj.optString(TAG_OWNERNAME),
 						jObj.getString(TAG_TIMESTAMP),
 						jObj.getString(TAG_USERURL),
 						Integer.toString(jObj.getInt(TAG_USERID)));
