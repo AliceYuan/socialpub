@@ -13,9 +13,18 @@ app = Flask(__name__)
 def bookTableLookup(bookId):
     return db["books"].find_one({"bookid":bookId})
 
+def getIndexStr(paragraphIndex, elementIndex, charIndex):
+    NUM_PADDING = 10
+    str_ = '%s:%s:%s' % (
+        str(paragraphIndex).zfill(NUM_PADDING),
+        str(elementIndex).zfill(NUM_PADDING),
+        str(charIndex).zfill(NUM_PADDING),
+    )
+    return str_
+
 @app.route("/getcomments", methods=["GET"])
 def getcomments():
-    bookId = int(request.args.get("bookId", 1))
+    bookId = request.args.get("bookId", "")
     paragraphStartIndex = int(request.args.get("paragraphStartIndex", None))
     paragraphEndIndex = int(request.args.get("paragraphEndIndex", None))
     elementStartIndex = int(request.args.get("elementStartIndex", None))
@@ -27,16 +36,27 @@ def getcomments():
     if paragraphEndIndex is None or elementEndIndex is None or charEndIndex is None:
         return dumps({"error": "incorrect ending page indexing values"})
 
+    idxStartStr = getIndexStr(paragraphStartIndex, elementStartIndex, charStartIndex)
+    idxEndStr = getIndexStr(paragraphStartIndex, elementStartIndex, charEndIndex)
+
     collection = bookTableLookup(bookId)
     if not collection:
         return dumps({"error": "no such book"})
     collection = collection["collection"]
 
-    query = {
-        "elementStartIndex": {"$lt": elementEndIndex},
-        "elementEndIndex": {"$gt": elementStartIndex}
-    }
-    results = [x for x in db[collection].find(query)]
+    results = []
+    for row in db[collection]:
+        pageStartStr = getIndexStr(row['paragraphStartIndex'], row['elementStartIndex'], row['charStartIndex'])
+        pageEndStr = getIndexStr(row['paragraphEndIndex'], row['elementEndIndex'], row['charEndIndex'])
+        if ((idxEndStr >= pageStartStr and idxEndStr < pageEndStr) or
+            (idxStartStr >= pageStartStr and idxStartStr < pageEndStr)):
+            results.append(row)
+
+    #query = {
+    #    "elementStartIndex": {"$lt": elementEndIndex},
+    #    "elementEndIndex": {"$gt": elementStartIndex}
+    #}
+    #results = [x for x in db[collection].find(query)]
 
     return dumps(results)
 
