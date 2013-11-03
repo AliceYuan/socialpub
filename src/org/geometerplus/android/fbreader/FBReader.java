@@ -20,41 +20,58 @@
 package org.geometerplus.android.fbreader;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.geometerplus.android.fbreader.api.ApiListener;
+import org.geometerplus.android.fbreader.api.ApiServerImplementation;
+import org.geometerplus.android.fbreader.api.PluginApi;
+import org.geometerplus.android.fbreader.library.BookInfoActivity;
+import org.geometerplus.android.fbreader.libraryService.BookCollectionShadow;
+import org.geometerplus.android.fbreader.tips.TipsActivity;
+import org.geometerplus.android.util.UIUtil;
+import org.geometerplus.fbreader.book.Book;
+import org.geometerplus.fbreader.book.Bookmark;
+import org.geometerplus.fbreader.book.SerializerUtil;
+import org.geometerplus.fbreader.bookmodel.BookModel;
+import org.geometerplus.fbreader.fbreader.ActionCode;
+import org.geometerplus.fbreader.fbreader.CancelMenuHelper;
+import org.geometerplus.fbreader.fbreader.FBReaderApp;
+import org.geometerplus.fbreader.tips.TipsManager;
+import org.geometerplus.zlibrary.core.filesystem.ZLFile;
+import org.geometerplus.zlibrary.core.library.ZLibrary;
+import org.geometerplus.zlibrary.core.resources.ZLResource;
+import org.geometerplus.zlibrary.text.view.ZLTextView;
+import org.geometerplus.zlibrary.ui.android.R;
+import org.geometerplus.zlibrary.ui.android.application.ZLAndroidApplicationWindow;
+import org.geometerplus.zlibrary.ui.android.library.UncaughtExceptionHandler;
+import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
+import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
+import org.geometerplus.zlibrary.ui.android.view.AndroidFontUtil;
+import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 
 import android.app.Activity;
 import android.app.SearchManager;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.view.*;
+import android.view.GestureDetector;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnLongClickListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
-
-import org.geometerplus.zlibrary.core.filesystem.ZLFile;
-import org.geometerplus.zlibrary.core.library.ZLibrary;
-import org.geometerplus.zlibrary.core.resources.ZLResource;
-
-import org.geometerplus.zlibrary.text.view.ZLTextView;
-
-import org.geometerplus.zlibrary.ui.android.R;
-import org.geometerplus.zlibrary.ui.android.application.ZLAndroidApplicationWindow;
-import org.geometerplus.zlibrary.ui.android.library.*;
-import org.geometerplus.zlibrary.ui.android.view.AndroidFontUtil;
-import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
-
-import org.geometerplus.fbreader.book.*;
-import org.geometerplus.fbreader.bookmodel.BookModel;
-import org.geometerplus.fbreader.fbreader.*;
-import org.geometerplus.fbreader.tips.TipsManager;
-
-import org.geometerplus.android.fbreader.api.*;
-import org.geometerplus.android.fbreader.library.BookInfoActivity;
-import org.geometerplus.android.fbreader.libraryService.BookCollectionShadow;
-import org.geometerplus.android.fbreader.tips.TipsActivity;
-
-import org.geometerplus.android.util.UIUtil;
+import android.widget.Toast;
 
 public final class FBReader extends Activity {
 	public static final String ACTION_OPEN_BOOK = "android.fbreader.action.VIEW";
@@ -85,7 +102,8 @@ public final class FBReader extends Activity {
 
 	private FBReaderApp myFBReaderApp;
 	private volatile Book myBook;
-
+	private GestureDetector gestureDetector;
+	
 	private RelativeLayout myRootView;
 	private ZLAndroidWidget myMainView;
 
@@ -181,6 +199,16 @@ public final class FBReader extends Activity {
 
 		getZLibrary().setActivity(this);
 
+		OnLongClickListener longListener = new OnLongClickListener() {
+		    @Override
+		    public boolean onLongClick(View v) {
+            	Intent intent = new Intent(FBReader.this, ReSoViewPagerFragmentActivity.class);
+            	FBReader.this.startActivity(intent);
+		    	return true;
+		    }
+
+		};
+		
 		myFBReaderApp = (FBReaderApp)FBReaderApp.Instance();
 		if (myFBReaderApp == null) {
 			myFBReaderApp = new FBReaderApp(new BookCollectionShadow());
@@ -201,6 +229,15 @@ public final class FBReader extends Activity {
 			WindowManager.LayoutParams.FLAG_FULLSCREEN, myFullScreenFlag
 		);
 
+		gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+            	Intent intent = new Intent(FBReader.this, ReSoViewPagerFragmentActivity.class);
+            	FBReader.this.startActivity(intent);
+                return true;
+            }
+        });
+		
 		if (myFBReaderApp.getPopupById(TextSearchPopup.ID) == null) {
 			new TextSearchPopup(myFBReaderApp);
 		}
@@ -217,6 +254,8 @@ public final class FBReader extends Activity {
 		myFBReaderApp.addAction(ActionCode.SHOW_TOC, new ShowTOCAction(this, myFBReaderApp));
 		myFBReaderApp.addAction(ActionCode.SHOW_BOOKMARKS, new ShowBookmarksAction(this, myFBReaderApp));
 		myFBReaderApp.addAction(ActionCode.SHOW_NETWORK_LIBRARY, new ShowNetworkLibraryAction(this, myFBReaderApp));
+		myFBReaderApp.addAction(ActionCode.SHOW_RESO, new ShowReSoAction(this, myFBReaderApp));
+
 
 		myFBReaderApp.addAction(ActionCode.SHOW_MENU, new ShowMenuAction(this, myFBReaderApp));
 		myFBReaderApp.addAction(ActionCode.SHOW_NAVIGATION, new ShowNavigationAction(this, myFBReaderApp));
@@ -498,6 +537,12 @@ public final class FBReader extends Activity {
 		return true;
 	}
 
+	public boolean onResoRequested() {
+		Intent intent = new Intent(FBReader.this, ReSoViewPagerFragmentActivity.class);
+    	FBReader.this.startActivity(intent);
+		return true;
+	}
+	
 	public void showSelectionPanel() {
 		final ZLTextView view = myFBReaderApp.getTextView();
 		((SelectionPopup)myFBReaderApp.getPopupById(SelectionPopup.ID))
@@ -563,7 +608,9 @@ public final class FBReader extends Activity {
 	}
 
 	public void navigate() {
-		((NavigationPopup)myFBReaderApp.getPopupById(NavigationPopup.ID)).runNavigation();
+		onResoRequested(); 
+
+		//((NavigationPopup)myFBReaderApp.getPopupById(NavigationPopup.ID)).runNavigation();
 	}
 
 	private Menu addSubMenu(Menu menu, String id) {
@@ -595,13 +642,13 @@ public final class FBReader extends Activity {
 
 		menu.clear();
 		addMenuItem(menu, ActionCode.SHOW_LIBRARY, R.drawable.ic_menu_library);
-		addMenuItem(menu, ActionCode.SHOW_NETWORK_LIBRARY, R.drawable.ic_menu_networklibrary);
-		addMenuItem(menu, ActionCode.SHOW_TOC, R.drawable.ic_menu_toc);
+//		addMenuItem(menu, ActionCode.SHOW_NETWORK_LIBRARY, R.drawable.ic_menu_networklibrary);
+//		addMenuItem(menu, ActionCode.SHOW_TOC, R.drawable.ic_menu_toc);
 		addMenuItem(menu, ActionCode.SHOW_BOOKMARKS, R.drawable.ic_menu_bookmarks);
 		addMenuItem(menu, ActionCode.SWITCH_TO_NIGHT_PROFILE, R.drawable.ic_menu_night);
 		addMenuItem(menu, ActionCode.SWITCH_TO_DAY_PROFILE, R.drawable.ic_menu_day);
 		addMenuItem(menu, ActionCode.SEARCH, R.drawable.ic_menu_search);
-		addMenuItem(menu, ActionCode.SHARE_BOOK, R.drawable.ic_menu_search);
+//		addMenuItem(menu, ActionCode.SHARE_BOOK, R.drawable.ic_menu_search);
 		addMenuItem(menu, ActionCode.SHOW_PREFERENCES);
 		addMenuItem(menu, ActionCode.SHOW_BOOK_INFO);
 		final Menu subMenu = addSubMenu(menu, "screenOrientation");
@@ -613,10 +660,12 @@ public final class FBReader extends Activity {
 			addMenuItem(subMenu, ActionCode.SET_SCREEN_ORIENTATION_REVERSE_PORTRAIT);
 			addMenuItem(subMenu, ActionCode.SET_SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
 		}
-		addMenuItem(menu, ActionCode.INCREASE_FONT);
-		addMenuItem(menu, ActionCode.DECREASE_FONT);
-		addMenuItem(menu, ActionCode.SHOW_NAVIGATION);
-		addMenuItem(menu, ActionCode.OPEN_WEB_HELP);
+//		addMenuItem(menu, ActionCode.INCREASE_FONT);
+//		addMenuItem(menu, ActionCode.DECREASE_FONT);
+//		addMenuItem(menu, ActionCode.SHOW_NAVIGATION);
+//		addMenuItem(menu, ActionCode.OPEN_WEB_HELP);
+//		addMenuItem(menu, ActionCode.SHOW_RESO);
+
 		synchronized (myPluginActions) {
 			int index = 0;
 			for (PluginApi.ActionInfo info : myPluginActions) {
@@ -639,7 +688,6 @@ public final class FBReader extends Activity {
 		super.onCreateOptionsMenu(menu);
 
 		setupMenu(menu);
-
 		return true;
 	}
 
@@ -744,4 +792,13 @@ public final class FBReader extends Activity {
 	private BookCollectionShadow getCollection() {
 		return (BookCollectionShadow)myFBReaderApp.Collection;
 	}
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+//	    if (!gestureDetector.onTouchEvent(event))
+	        return super.onTouchEvent(event);
+//	    return true;
+	}
+
 }
+
