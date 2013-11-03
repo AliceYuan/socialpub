@@ -16,13 +16,31 @@ def bookTableLookup(bookid):
 @app.route("/getcomments", methods=["GET"])
 def getcomments():
     bookid = int(request.args.get("bookid", 1))
-    page = int(request.args.get("page", 0))
+    paragraphStartIndex = int(request.args.get("paragraphStartIndex", None))
+    elementStartIndex = int(request.args.get("elementStartIndex", None))
+    charStartIndex = int(request.args.get("charStartIndex", None))
+    paragraphEndIndex = int(request.args.get("paragraphEndIndex", None))
+    elementEndIndex = int(request.args.get("elementEndIndex", None))
+    charEndIndex = int(request.args.get("charEndIndex", None))
+    if not paragraphStartIndex or not elementStartIndex or not charStartIndex:
+        return dumps({"error": "incorrect starting page indexing values"})
+    if not paragraphEndIndex or not elementEndIndex or not charEndIndex:
+        return dumps({"error": "incorrect ending page indexing values"})
+
     collection = bookTableLookup(bookid)
     if not collection:
         return dumps({"error": "no such book"})
     collection = collection["collection"]
 
-    results = [x for x in db[collection].find({"page":page})]
+    query = {
+        "$or": [{"paragraphStartIndex": {"$in": range(paragraphStartIndex, paragraphEndIndex)}},
+            {"paragraphEndIndex": {"$in": range(paragraphStartIndex, paragraphEndIndex)}}],
+        "$or": [{"elementStartIndex": {"$in": range(elementStartIndex, elementEndIndex)}},
+            {"elementEndIndex": {"$in": range(elementStartIndex, elementEndIndex)}}],
+        "$or": [{"charStartIndex": {"$in": range(charStartIndex, charEndIndex)}},
+            {"charEndIndex": {"$in": range(charStartIndex, charEndIndex)}}]
+    }
+    results = [x for x in db[collection].find(query)]
     return dumps(results)
 
 
