@@ -33,12 +33,8 @@ def getcomments():
     collection = collection["collection"]
 
     query = {
-        "paragraphStartIndex": {"$lte": paragraphEndIndex},
-        "paragraphEndIndex": {"$gte": paragraphStartIndex},
-        "elementStartIndex": {"$lte": elementEndIndex},
-        "elementEndIndex": {"$gte": elementStartIndex},
-        "charStartIndex": {"$lte": charEndIndex},
-        "charEndIndex": {"$gte": charStartIndex}
+        "elementStartIndex": {"$lt": elementEndIndex},
+        "elementEndIndex": {"$gt": elementStartIndex}
     }
     results = [x for x in db[collection].find(query)]
 
